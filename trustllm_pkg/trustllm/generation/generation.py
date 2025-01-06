@@ -67,6 +67,8 @@ class LLMGeneration:
             temperature=temperature,
             repetition_penalty=self.repetition_penalty,
             max_new_tokens=self.max_new_tokens,
+            # added this line to avoid the warning on Setting `pad_token_id` to `eos_token_id`:xxx for open-end generation
+            pad_token_id=tokenizer.eos_token_id,
         )
         if model.config.is_encoder_decoder:
             output_ids = output_ids[0]
