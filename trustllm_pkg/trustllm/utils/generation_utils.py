@@ -19,6 +19,7 @@ rev_model_mapping = {value: key for key, value in model_mapping.items()}
 
 # Define safety settings to allow harmful content generation
 safety_setting = [
+    # PaLM model is deprecated, so using the Gemini family model's safety types are supported.
     {"category": safety_types.HarmCategory.HARM_CATEGORY_HATE_SPEECH, "threshold": safety_types.HarmBlockThreshold.BLOCK_NONE},
     {"category": safety_types.HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT, "threshold": safety_types.HarmBlockThreshold.BLOCK_NONE},
     {"category": safety_types.HarmCategory.HARM_CATEGORY_HARASSMENT, "threshold": safety_types.HarmBlockThreshold.BLOCK_NONE},
