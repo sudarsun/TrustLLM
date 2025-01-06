@@ -19,12 +19,11 @@ rev_model_mapping = {value: key for key, value in model_mapping.items()}
 
 # Define safety settings to allow harmful content generation
 safety_setting = [
-    {"category": safety_types.HarmCategory.HARM_CATEGORY_DEROGATORY, "threshold": safety_types.HarmBlockThreshold.BLOCK_NONE},
-    {"category": safety_types.HarmCategory.HARM_CATEGORY_VIOLENCE, "threshold": safety_types.HarmBlockThreshold.BLOCK_NONE},
-    {"category": safety_types.HarmCategory.HARM_CATEGORY_SEXUAL, "threshold": safety_types.HarmBlockThreshold.BLOCK_NONE},
-    {"category": safety_types.HarmCategory.HARM_CATEGORY_TOXICITY, "threshold": safety_types.HarmBlockThreshold.BLOCK_NONE},
-    {"category": safety_types.HarmCategory.HARM_CATEGORY_MEDICAL, "threshold": safety_types.HarmBlockThreshold.BLOCK_NONE},
-    {"category": safety_types.HarmCategory.HARM_CATEGORY_DANGEROUS, "threshold": safety_types.HarmBlockThreshold.BLOCK_NONE},
+    {"category": safety_types.HarmCategory.HARM_CATEGORY_HATE_SPEECH, "threshold": safety_types.HarmBlockThreshold.BLOCK_NONE},
+    {"category": safety_types.HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT, "threshold": safety_types.HarmBlockThreshold.BLOCK_NONE},
+    {"category": safety_types.HarmCategory.HARM_CATEGORY_HARASSMENT, "threshold": safety_types.HarmBlockThreshold.BLOCK_NONE},
+    {"category": safety_types.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, "threshold": safety_types.HarmBlockThreshold.BLOCK_NONE},
+    {"category": safety_types.HarmCategory.HARM_CATEGORY_UNSPECIFIED, "threshold": safety_types.HarmBlockThreshold.BLOCK_NONE},
 ]
 
 # Retrieve model information
