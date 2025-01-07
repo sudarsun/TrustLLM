@@ -10,6 +10,7 @@ from trustllm.utils import file_process
 import trustllm
 import trustllm.config
 import replicate
+import ollama
 
 # Load model information from configuration
 model_info = trustllm.config.model_info
@@ -80,6 +81,13 @@ def replicate_api(string, model, temperature):
     res = "".join(res)
     return res
 
+def ollama_api(string, model, temperature):
+    top_p = 0.9 if temperature > 1e-5 else 1
+    response = ollama.chat(model=model, messages=[{
+        'role': 'user',
+        'content': f'{string}',
+    },], temperature = temperature, top_p=top_p)
+    return response['message']['content']
 
 @retry(wait=wait_random_exponential(min=1, max=10), stop=stop_after_attempt(6))
 def claude_api(string, model, temperature):
@@ -145,7 +153,7 @@ def zhipu_api(string, model, temperature):
 
 
 @retry(wait=wait_random_exponential(min=1, max=10), stop=stop_after_attempt(5))
-def gen_online(model_name, prompt, temperature, replicate=False, deepinfra=False):
+def gen_online(model_name, prompt, temperature, replicate=False, deepinfra=False, ollama=False):
     if model_name in model_info['wenxin_model']:
         res = get_ernie_res(prompt, temperature=temperature)
     elif model_name in model_info['google_model']:
@@ -165,6 +173,8 @@ def gen_online(model_name, prompt, temperature, replicate=False, deepinfra=False
         res = replicate_api(prompt, model_name, temperature)
     elif deepinfra:
         res = deepinfra_api(prompt, model_name, temperature)
+    elif ollama:
+        res = ollama_api(prompt, model_name, temperature)
     else:
         raise ValueError(f"Unknown model name: {model_name}")
     return res

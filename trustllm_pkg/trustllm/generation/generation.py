@@ -9,6 +9,7 @@ import threading
 from tqdm import tqdm
 import urllib3
 import traceback
+import ollama
 
 load_dotenv()
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -22,6 +23,7 @@ class LLMGeneration:
                  online_model=False,
                  use_deepinfra=False,
                  use_replicate=False,
+                 use_ollama=False,
                  repetition_penalty=1.0,
                  num_gpus=1,
                  max_new_tokens=512,
@@ -42,6 +44,7 @@ class LLMGeneration:
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
         self.use_replicate = use_replicate
         self.use_deepinfra = use_deepinfra
+        self.use_ollama = use_ollama
         self.model_name = model_mapping.get(self.model_path, "")
 
     def _generation_hf(self, prompt, tokenizer, model, temperature):
@@ -79,8 +82,6 @@ class LLMGeneration:
         )
         return outputs
 
-
-
     def generation(self, model_name, prompt, tokenizer, model, temperature=None):
         """
             Generates a response using either an online or a local model.
@@ -92,9 +93,14 @@ class LLMGeneration:
             :param temperature: The temperature setting for text generation. Default is None.
             :return: The generated text as a string.
             """
+        # adjust the model list based on ollama's listing
+        model_list = self.online_model_list
+        if self.use_ollama:
+            model_list = model_list + [m.model for m in ollama.list().models]
 
         try:
-            if (model_name in self.online_model_list) and ((self.online_model and self.use_replicate) or (self.online_model and self.use_deepinfra)):
+            if (model_name in model_list) and ((self.online_model and self.use_replicate) or (self.online_model and self.use_deepinfra) 
+                                               or (self.use_ollama)):
                 ans = gen_online(model_name, prompt, temperature, replicate=self.use_replicate, deepinfra=self.use_deepinfra)
             else:
                 ans = self._generation_hf(prompt, tokenizer, model, temperature)
