@@ -151,7 +151,7 @@ llm_gen = LLMGeneration(
 llm_gen.generation_results()
 ```
 
-#### ** Ollama Support **
+### ** Ollama Support **
 
 If the models to be evaluated is hosted locally on an Ollama server, using the server URL is supported for the generation task.  The `model_path` shall take the name of the target model hosted on the Ollama server.
 
