@@ -12,6 +12,9 @@ __pycache__/
 # C extensions
 *.so
 
+*/generation_results/
+generation_results/
+
 # Distribution / packaging
 .Python
 build/
@@ -31,6 +34,7 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+trustllm_pkg/trustllm.egg-info/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

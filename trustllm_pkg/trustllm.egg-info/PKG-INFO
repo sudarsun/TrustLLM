@@ -1,10 +1,10 @@
 Metadata-Version: 2.1
 Name: trustllm
-Version: 0.3.0
-Summary: TrustLLM
-Home-page: https://github.com/HowieHwong/TrustLLM
-Author: Yue Huang & Siyuan Wu & Haoran Wang
-Author-email: trustllm.benchmark@gmail.com
+Version: 0.3.1
+Summary: TrustLLM (with Ollama support)
+Home-page: https://github.com/sudarsun/TrustLLM
+Author: Yue Huang & Siyuan Wu & Haoran Wang & Sudarsun Santhiappan
+Author-email: sudarsun@alumni.iitm.ac.in
 Requires-Dist: transformers
 Requires-Dist: huggingface_hub
 Requires-Dist: peft
@@ -25,3 +25,4 @@ Requires-Dist: google-api-python-client
 Requires-Dist: google.ai.generativelanguage
 Requires-Dist: replicate
 Requires-Dist: zhipuai>=2.0.1
+Requires-Dist: ollama
