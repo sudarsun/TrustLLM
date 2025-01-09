@@ -25,12 +25,12 @@ setup(
         'python-dotenv',
         'urllib3',
         'anthropic',
-        'google.generativeai==0.5.4',
+        'google.generativeai',
         'google-api-python-client',
         'google.ai.generativelanguage',
         'replicate',
         'zhipuai>=2.0.1',
-        'ollama==0.4.5'
+        'ollama'
 ],
     classifiers=[
     ],
