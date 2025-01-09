@@ -2,9 +2,9 @@ from setuptools import setup, find_packages
 
 setup(
     name='trustllm',
-    version='0.3.0',
+    version='0.3.1',
     description='TrustLLM',  
-    author='Yue Huang & Siyuan Wu & Haoran Wang',
+    author='Yue Huang & Siyuan Wu & Haoran Wang & Sudarsun Santhiappan',
     author_email='trustllm.benchmark@gmail.com',
     url='https://github.com/HowieHwong/TrustLLM',  
     packages=find_packages(), 
@@ -29,7 +29,8 @@ setup(
         'google-api-python-client',
         'google.ai.generativelanguage',
         'replicate',
-        'zhipuai>=2.0.1'
+        'zhipuai>=2.0.1',
+        'ollama==0.4.5'
 ],
     classifiers=[
     ],
