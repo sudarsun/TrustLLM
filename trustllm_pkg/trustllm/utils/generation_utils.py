@@ -81,12 +81,12 @@ def replicate_api(string, model, temperature):
     res = "".join(res)
     return res
 
-def ollama_api(string, model, temperature):
+def ollama_api(string, model, temperature, ollama_host):
+    ollama_client = ollama.Client(host=ollama_host)
     top_p = 0.9 if temperature > 1e-5 else 1
-    response = ollama.chat(model=model, messages=[{
-        'role': 'user',
-        'content': f'{string}',
-    },], temperature = temperature, top_p=top_p)
+    response = ollama_client.chat(model=model, 
+                                  messages=[{'role': 'user','content': f'{string}',},],
+                                  options={'temperature': temperature, "top_p" :top_p})
     return response['message']['content']
 
 @retry(wait=wait_random_exponential(min=1, max=10), stop=stop_after_attempt(6))
@@ -153,8 +153,10 @@ def zhipu_api(string, model, temperature):
 
 
 @retry(wait=wait_random_exponential(min=1, max=10), stop=stop_after_attempt(5))
-def gen_online(model_name, prompt, temperature, replicate=False, deepinfra=False, ollama=False):
-    if model_name in model_info['wenxin_model']:
+def gen_online(model_name, prompt, temperature, replicate=False, deepinfra=False, ollama_host=""):
+    if ollama_host:
+        res = ollama_api(string=prompt, model=model_name, temperature=temperature, ollama_host=ollama_host)
+    elif model_name in model_info['wenxin_model']:
         res = get_ernie_res(prompt, temperature=temperature)
     elif model_name in model_info['google_model']:
         if model_name == 'bison-001':
@@ -173,8 +175,6 @@ def gen_online(model_name, prompt, temperature, replicate=False, deepinfra=False
         res = replicate_api(prompt, model_name, temperature)
     elif deepinfra:
         res = deepinfra_api(prompt, model_name, temperature)
-    elif ollama:
-        res = ollama_api(prompt, model_name, temperature)
     else:
         raise ValueError(f"Unknown model name: {model_name}")
     return res

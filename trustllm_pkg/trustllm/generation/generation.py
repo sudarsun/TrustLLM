@@ -23,7 +23,7 @@ class LLMGeneration:
                  online_model=False,
                  use_deepinfra=False,
                  use_replicate=False,
-                 use_ollama=False,
+                 ollama_host="",
                  repetition_penalty=1.0,
                  num_gpus=1,
                  max_new_tokens=512,
@@ -44,8 +44,8 @@ class LLMGeneration:
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
         self.use_replicate = use_replicate
         self.use_deepinfra = use_deepinfra
-        self.use_ollama = use_ollama
-        self.model_name = model_mapping.get(self.model_path, "")
+        self.ollama_host = ollama_host
+        self.model_name = model_path if ollama_host else model_mapping.get(self.model_path, "")
 
     def _generation_hf(self, prompt, tokenizer, model, temperature):
         """
@@ -95,13 +95,14 @@ class LLMGeneration:
             """
         # adjust the model list based on ollama's listing
         model_list = self.online_model_list
-        if self.use_ollama:
-            model_list = model_list + [m.model for m in ollama.list().models]
+        if self.ollama_host:
+            ollama_client = ollama.Client(host=self.ollama_host)
+            model_list = model_list + [m.model for m in ollama_client.list().models]
 
         try:
             if (model_name in model_list) and ((self.online_model and self.use_replicate) or (self.online_model and self.use_deepinfra) 
-                                               or (self.use_ollama)):
-                ans = gen_online(model_name, prompt, temperature, replicate=self.use_replicate, deepinfra=self.use_deepinfra)
+                                               or (self.ollama_host)):
+                ans = gen_online(model_name, prompt, temperature, replicate=self.use_replicate, deepinfra=self.use_deepinfra, ollama_host=self.ollama_host)
             else:
                 ans = self._generation_hf(prompt, tokenizer, model, temperature)
             if not ans:
@@ -269,10 +270,17 @@ class LLMGeneration:
             :param args: Contains parameters like test type, model name, and other configurations.
             :return: "OK" if successful, None otherwise.
             """
+        # adjust the model list based on ollama's listing
+        model_list = self.online_model_list
+        if self.ollama_host:
+            ollama_client = ollama.Client(host=self.ollama_host)
+            model_list = model_list + [m.model for m in ollama_client.list().models]
+
         model_name = self.model_name
         print(f"Beginning generation with {self.test_type} evaluation at temperature {self.temperature}.")
         print(f"Evaluation target model: {model_name}")
-        if (model_name in self.online_model_list) and ((self.online_model and self.use_replicate) or (self.online_model and self.use_deepinfra)):
+        if (model_name in model_list) and ((self.online_model and self.use_replicate) or (self.online_model and self.use_deepinfra)
+                                           or self.ollama_host):
             model, tokenizer = (None, None) 
         else:
             model, tokenizer = load_model(
